@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
-export const Filter = ({filterContacts}) => {
-return <input type="text" name="filter" onChange={filterContacts} />
+export const Filter = ({inputFilter, value}) => {
+return <input type="text" name="filter" onChange={inputFilter} value={value}  />
 }
 
 Filter.propTypes = {
-    addContact: PropTypes.func
+  inputFilter: PropTypes.func.isRequired,
+  value: PropTypes.string.isRequired
   };
