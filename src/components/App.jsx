@@ -3,6 +3,7 @@ import { nanoid } from 'nanoid';
 import { ContactList } from './ContactList';
 import { ContactForm } from './ContactForm';
 import { Filter } from './Filter';
+import css from './App.module.css'
 export class App extends React.Component {
   state = {
     contacts: [
@@ -34,35 +35,37 @@ export class App extends React.Component {
     const filtered = contacts.filter(contact =>
       contact.name.toLowerCase().includes(value.toLowerCase())
     );
+    if (!value) {
+      this.setState({ filter: '' });
+      return;
+    }
     this.setState({ filter: filtered });
   };
 
   deleteContact = e => {
     const id = e.target.parentNode.id;
-    const { contacts } = this.state;
+    const { contacts, filter } = this.state;
     const delContact = contacts.filter(contact => contact.id !== id);
     this.setState({ contacts: delContact });
+    if (filter && filter.length !== 0) {
+      const delFilter = filter.filter(contact => contact.id !== id);
+      this.setState({ filter: delFilter });
+    }
   };
 
   render() {
     return (
-      <>
+      <div className={css.wrapper}>
         <h1>Phonebook</h1>
         <ContactForm addContact={this.addContact} />
         <h2>Contacts</h2>
         <Filter filterContacts={this.filterContacts} />
-        {this.state.filter ? (
-          <ContactList
-            contacts={this.state.filter}
-            deleteContact={this.deleteContact}
-          />
-        ) : (
-          <ContactList
-            contacts={this.state.contacts}
-            deleteContact={this.deleteContact}
-          />
-        )}
-      </>
+        <ContactList
+          filter={this.state.filter}
+          contacts={this.state.contacts}
+          deleteContact={this.deleteContact}
+        />
+      </div>
     );
   }
 }
